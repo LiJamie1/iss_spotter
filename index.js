@@ -31,9 +31,8 @@ nextISSTimes((error, passTimes) => {
   // success, print out the deets!
 
   for (const time of passTimes) {
-    const date = time.risetime * 1000
-    const dateObject = new Date(date)
-    const humanDateFormat = dateObject.toLocaleString()
-    console.log(`Next pass at ${humanDateFormat} UTC-08:00 (Pacific Standard Time) for ${time.duration} seconds!`)
+    const date = new Date(0);
+    date.setUTCSeconds(time.risetime);
+    console.log(`Next pass at ${date} for ${time.duration} seconds!`)
   }
 });

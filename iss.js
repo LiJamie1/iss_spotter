@@ -1,37 +1,38 @@
 const request = require('request');
+
 // fetch ip
-// const fetchMyIP = function(callback) {
-//   request('https://api.ipify.org?format=json', (error, response, body) => {
-//     if (error) {
-//       callback(error);
-//       return;
-//     }
-//     if (response.statusCode !== 200) {
-//       const msg = `Status Code ${response.statusCode} when fetching IP. Response: ${body}`;
-//       callback(Error(msg), null);
-//       return;
-//     }
-//     const IP = JSON.parse(body);
-//     callback(null, IP);
-//   });
-// };
+const fetchMyIP = function(callback) {
+  request('https://api.ipify.org?format=json', (error, response, body) => {
+    if (error) {
+      callback(error);
+      return;
+    }
+    if (response.statusCode !== 200) {
+      const msg = `Status Code ${response.statusCode} when fetching IP. Response: ${body}`;
+      callback(Error(msg), null);
+      return;
+    }
+    const IP = JSON.parse(body);
+    callback(null, IP);
+  });
+};
 
 // fetch coords by ip
-// const fetchCoordsByIP = function(ip, callback) {
-//   request(`https://freegeoip.app/json/${ip}`, (error, response, body) => {
-//     if (error) {
-//       callback(error);
-//       return;
-//     }
-//     if (response.statusCode !== 200) {
-//       const msg = `Status Code ${response.statusCode} when fetching Coords. Response: ${body}`;
-//       callback(Error(msg), null);
-//       return;
-//     }
-//     const { latitude, longitude } = JSON.parse(body)
-//     callback(null, { latitude, longitude })
-//   });
-// };
+const fetchCoordsByIP = function(ip, callback) {
+  request(`https://freegeoip.app/json/${ip}`, (error, response, body) => {
+    if (error) {
+      callback(error);
+      return;
+    }
+    if (response.statusCode !== 200) {
+      const msg = `Status Code ${response.statusCode} when fetching Coords. Response: ${body}`;
+      callback(Error(msg), null);
+      return;
+    }
+    const { latitude, longitude } = JSON.parse(body)
+    callback(null, { latitude, longitude })
+  });
+};
 
 // fetch flyover times
 const fetchISSFlyOverTimes = function(coords, callback) {
@@ -50,6 +51,27 @@ const fetchISSFlyOverTimes = function(coords, callback) {
   });
 };
 
-module.exports = { fetchISSFlyOverTimes };
+// next ISS times
+const nextISSTimes = function(callback) {
+  fetchMyIP((error, ip) => {
+    if (error) {
+      return callback(error, null) 
+    }
+    fetchCoordsByIP(ip.ip, (error, coords) => {
+      if (error) {
+        return callback(error, null)
+      }
+      fetchISSFlyOverTimes(coords, (error, passes) => {
+        if (error) {
+          return callback(error, null)
+        }
+        callback(null, passes)
+      })
+    })
+  })
+};
+
+module.exports = { nextISSTimes };
 // fetchMyIP
 // fetchCoordsByIP
+// fetchISSFlyOverTimes

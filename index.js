@@ -1,4 +1,4 @@
-const { fetchISSFlyOverTimes } = require('./iss');
+const { nextISSTimes } = require('./iss');
 
 // fetchMyIP((error, ip) => {
 //   if (error) {
@@ -16,10 +16,24 @@ const { fetchISSFlyOverTimes } = require('./iss');
 //   console.log('It worked! Returned coords:', coords);
 // });
 
-fetchISSFlyOverTimes('INSERT COORDS HERE', (error, passTimes) => {
+// fetchISSFlyOverTimes('INSERT COORDS HERE', (error, passTimes) => {
+//   if (error) {
+//     console.log("It didn't work!", error);
+//     return;
+//   }
+//   console.log('It worked! Returned flyover times:', passTimes);
+// });
+
+nextISSTimes((error, passTimes) => {
   if (error) {
-    console.log("It didn't work!", error);
-    return;
+    return console.log("It didn't work!", error);
   }
-  console.log('It worked! Returned flyover times:', passTimes);
+  // success, print out the deets!
+
+  for (const time of passTimes) {
+    const date = time.risetime * 1000
+    const dateObject = new Date(date)
+    const humanDateFormat = dateObject.toLocaleString()
+    console.log(`Next pass at ${humanDateFormat} UTC-08:00 (Pacific Standard Time) for ${time.duration} seconds!`)
+  }
 });

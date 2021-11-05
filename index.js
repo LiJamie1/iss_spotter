@@ -33,6 +33,6 @@ nextISSTimes((error, passTimes) => {
   for (const time of passTimes) {
     const date = new Date(0);
     date.setUTCSeconds(time.risetime);
-    console.log(`Next pass at ${date} for ${time.duration} seconds!`)
+    console.log(`Next pass at ${date} for ${time.duration} seconds!`);
   }
 });
